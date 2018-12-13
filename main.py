@@ -15,30 +15,8 @@ class MyWidget(QMainWindow,Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        #uic.loadUi('project3.ui',self)
         self.scrollArea.setWidgetResizable(True)
-        self.pushButton.setText('Ваша история - 1')
-        self.pushButton_2.setText('Ваша история - 2')
-        self.pushButton_12.setText('Ваша история - 3')
-        self.pushButton_13.setText('Ваша история - 4')
-        self.pushButton_14.setText('Ваша история - 5')
-        self.pushButton_15.setText('Ваша история - 6')
-        self.pushButton_16.setText('Ваша история - 7')
-        self.pushButton_17.setText('Ваша история - 8')
-        self.pushButton_18.setText('Ваша история - 9')
-        self.pushButton_19.setText('Ваша история - 10')
-        self.pushButton_20.setText('Ваша история - 11')
-        self.pushButton_21.setText('Ваша история - 12')
-        self.pushButton_22.setText('Ваша история - 13')
-        self.pushButton_23.setText('Ваша история - 14')
-        self.pushButton_24.setText('Ваша история - 15')
-        self.pushButton_25.setText('Ваша история - 16')
-        self.pushButton_26.setText('Ваша история - 17')
-        self.pushButton_27.setText('Ваша история - 18')
-        self.pushButton_28.setText('Ваша история - 19')
-        self.pushButton_29.setText('Ваша история - 20')
-        self.pushButton_30.setText('Ваша история - 21')        
-        
-        
         
         self.pushButton_6.clicked.connect(self.ch_story_less)
         self.pushButton_7.clicked.connect(self.ch_story_more)        
@@ -77,6 +55,14 @@ class MyWidget(QMainWindow,Ui_MainWindow):
         self.red = False
         self.d = False
         
+        try:
+            f = open('user.txt', 'r')
+            line = f.read()
+            f.close()
+            self.pushButton_3.setText(line)
+        except Exception:
+            pass
+        
         self.textBrowser.setText('ВЫБЕРИ СВОЮ ИСТОРИЮ')
         self.label_2.setPixmap(QPixmap('Заставка.jpg'))
         self.setNames()
@@ -88,8 +74,11 @@ class MyWidget(QMainWindow,Ui_MainWindow):
     def ask(self):
         i, okBtnPressed = QInputDialog.getText(self, "Введите имя", "Как тебя зовут?")
         if okBtnPressed:
-            self.pushButton_3.setText(i)       
-   
+            self.pushButton_3.setText(i)
+            f = open('user.txt', 'w')
+            f.write(i)
+            f.close()
+        
    
     def de(self):
         if self.d:
@@ -147,18 +136,26 @@ class MyWidget(QMainWindow,Ui_MainWindow):
                 else:
                     pass
             break
+        a = 'a'
         while self.spp != []:
             i, okBtnPressed = QInputDialog.getItem(self, "Выбери картинки", "Какую картинку добавить?", self.spp, 1, False)
             if okBtnPressed:
-                print(self.pyt + '/' + i)
-                shutil.copy(i, self.pyt + '/' + i)
+                im = Image.open(i)  
+                im.save(self.pyt + '/' + a + '.jpg')
+                a += 'a'
             else:
                 break
-        
+        a = 'a'
         while self.spt != []:
             i, okBtnPressed = QInputDialog.getItem(self, "Выбери тексты", "Какой текст добавить?", self.spt, 1, False)
             if okBtnPressed:
-                shutil.copy(i, self.pyt + '\\' + i)
+                f = open(i)
+                line = f.read()
+                f.close()
+                f = open(self.pyt + '/' + a + '.txt', 'w')
+                f.write(line)
+                f.close()
+                a += 'a'
             else:
                 break                
     
